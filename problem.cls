@@ -53,6 +53,12 @@
     \PassOptionsToPackage{english, romanian}{babel}
 }
 
+\DeclareOption{bg}{
+    \def\opt@bg{}
+    \PassOptionsToPackage{T2A}{fontenc}
+    \PassOptionsToPackage{english, bulgarian}{babel}
+}
+
 \DeclareOption{files}{\def\opt@files{}}
 
 \DeclareOption{header}{\def\opt@header{}}
@@ -136,6 +142,19 @@
     \tlpoints{Punctaj}
     \tlrestrictions{Restricţii}
     \tlsubtask{Subtask}
+\fi
+
+\ifdefined\opt@bg
+    \tlproblem{Задача}
+    \tlinputfile{Вход}
+    \tloutputfile{Изход}
+    \tlheaderc{C хедър}
+    \tlheadercpp{C++ хедър}
+    \tlexamples{Примерни тестове}
+    \tlexplanations{Обяснения на примерите}
+    \tlpoints{Точки}
+    \tlrestrictions{Ограничения}
+    \tlsubtask{Подзадача}
 \fi
 
 % Problem information
