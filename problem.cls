@@ -157,6 +157,19 @@
     \tlsubtask{Подзадача}
 \fi
 
+\ifdefined\opt@hu
+    \tlproblem{Feladat}
+    \tlinputfile{Bemenet fájl}
+    \tloutputfile{Kimenet fájl}
+    \tlheaderc{C header}
+    \tlheadercpp{C++ header}
+    \tlexamples{Példák}
+    \tlexplanations{Magyarázat}
+    \tlpoints{Pontok}
+    \tlrestrictions{Korlátok}
+    \tlsubtask{Részfeladat}
+\fi
+
 % Problem information
 
 \newcommand\@contest{Olimpiada Locala de Informatica}
