@@ -38,7 +38,7 @@
 % 
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{problem}[2022/2/18 Problem statement for Romanian olympiads]
+\ProvidesClass{problem}[2022/08/12 Problem statement for Romanian olympiads]
 \LoadClass[11pt,a4paper,oneside]{article}
 
 % Declaring options
@@ -53,11 +53,6 @@
     \PassOptionsToPackage{english, romanian}{babel}
 }
 
-\DeclareOption{bg}{
-    \def\opt@bg{}
-    \PassOptionsToPackage{T2A}{fontenc}
-    \PassOptionsToPackage{english, bulgarian}{babel}
-}
 
 \DeclareOption{files}{\def\opt@files{}}
 
@@ -79,6 +74,7 @@
 \RequirePackage{titlesec}
 \RequirePackage{graphicx}
 \RequirePackage{datatool-base}
+\RequirePackage{mfirstuc}
 \RequirePackage{amsmath}
 \RequirePackage{amsfonts}
 \RequirePackage{listings}
@@ -134,7 +130,7 @@
 \ifdefined\opt@ro
     \tlproblem{Problema}
     \tlinputfile{Fişier de intrare}
-    \tloutputfile{Fişer de ieşire}
+    \tloutputfile{Fişier de ieşire}
     \tlheaderc{Header C}
     \tlheadercpp{Header C++}
     \tlexamples{Exemple}
@@ -142,32 +138,6 @@
     \tlpoints{Punctaj}
     \tlrestrictions{Restricţii}
     \tlsubtask{Subtask}
-\fi
-
-\ifdefined\opt@bg
-    \tlproblem{Задача}
-    \tlinputfile{Вход}
-    \tloutputfile{Изход}
-    \tlheaderc{C хедър}
-    \tlheadercpp{C++ хедър}
-    \tlexamples{Примерни тестове}
-    \tlexplanations{Обяснения на примерите}
-    \tlpoints{Точки}
-    \tlrestrictions{Ограничения}
-    \tlsubtask{Подзадача}
-\fi
-
-\ifdefined\opt@hu
-    \tlproblem{Feladat}
-    \tlinputfile{Bemenet fájl}
-    \tloutputfile{Kimenet fájl}
-    \tlheaderc{C header}
-    \tlheadercpp{C++ header}
-    \tlexamples{Példák}
-    \tlexplanations{Magyarázat}
-    \tlpoints{Pontok}
-    \tlrestrictions{Korlátok}
-    \tlsubtask{Részfeladat}
 \fi
 
 % Problem information
@@ -240,7 +210,8 @@
     stringstyle=\color{red},
     tabsize=2,
     title=\lstname,
-    aboveskip=-10pt
+    aboveskip=-10pt,
+    columns=fixed
 }
 
 % Structural commands
