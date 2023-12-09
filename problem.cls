@@ -274,7 +274,7 @@
     \rhead{\footnotesize \includegraphics[height=15mm]{\@logo}\\\sffamily
     \formatdate{\@theday}{\@themonth}{\@theyear}}
 \else
-    \hoffset=-24mm
+    \hoffset=-1in
     \voffset=-30.5mm
     \textheight=255mm
     \textwidth=175mm
@@ -284,6 +284,7 @@
     \hfuzz=1pt
     \parindent=0mm
     \parskip=1ex
+    \oddsidemargin=17.5mm
     \setitemize{noitemsep,topsep=0pt}
     \setenumerate{noitemsep,topsep=0pt}
     \pagestyle{fancy}
