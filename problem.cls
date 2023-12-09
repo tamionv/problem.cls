@@ -1,6 +1,6 @@
 % BSD 3-Clause License
 % 
-% Copyright (c) 2021-2022, Tamio-Vesa Nakajima
+% Copyright (c) 2021-2023, Tamio-Vesa Nakajima
 % All rights reserved.
 % 
 % Redistribution and use in source and binary forms, with or without
@@ -38,10 +38,12 @@
 % 
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{problem}[2022/08/12 Problem statement for Romanian olympiads]
-\LoadClass[11pt,a4paper,oneside]{article}
+\ProvidesClass{problem}[2023/12/09 Problem statement for Romanian olympiads]
+\LoadClass[10pt,a4paper,oneside]{article}
 
 % Declaring options
+
+\DeclareOption{onistyle}{\def\opt@onistyle{}}
 
 \DeclareOption{en}{
     \def\opt@en{}
@@ -53,6 +55,28 @@
     \PassOptionsToPackage{english, romanian}{babel}
 }
 
+\DeclareOption{bg}{
+    \def\opt@bg{}
+    \PassOptionsToPackage{T2A}{fontenc}
+    \PassOptionsToPackage{english, bulgarian}{babel}
+}
+
+\DeclareOption{it}{
+    \def\opt@it{}
+    \PassOptionsToPackage{english, italian}{babel}
+}
+
+\DeclareOption{hu}{
+    \def\opt@hu{}
+    \PassOptionsToPackage{T1}{fontenc}
+    \PassOptionsToPackage{english, hungarian}{babel}
+}
+
+\DeclareOption{uk}{
+    \def\opt@uk{}
+    \PassOptionsToPackage{T2A}{fontenc}
+    \PassOptionsToPackage{english, ukrainian}{babel}
+}
 
 \DeclareOption{files}{\def\opt@files{}}
 
@@ -65,7 +89,6 @@
 % Packages
 
 \RequirePackage{fancyhdr}
-\RequirePackage{xstring}
 \RequirePackage[utf8]{inputenc}
 \RequirePackage{etoolbox}
 \RequirePackage{fontenc}
@@ -129,20 +152,74 @@
 
 \ifdefined\opt@ro
     \tlproblem{Problema}
-    \tlinputfile{Fişier de intrare}
-    \tloutputfile{Fişier de ieşire}
+    \tlinputfile{Fișier de intrare}
+    \tloutputfile{Fișier de ieșire}
     \tlheaderc{Header C}
     \tlheadercpp{Header C++}
     \tlexamples{Exemple}
     \tlexplanations{Explicații}
     \tlpoints{Punctaj}
-    \tlrestrictions{Restricţii}
+    \tlrestrictions{Restricții}
+    \tlsubtask{Subtask}
+\fi
+
+\ifdefined\opt@bg
+    \tlproblem{Задача}
+    \tlinputfile{Вход}
+    \tloutputfile{Изход}
+    \tlheaderc{Header C}
+    \tlheadercpp{Header C++}
+    \tlexamples{Пример}
+    \tlexplanations{Обяснение}
+    \tlpoints{Точки}
+    \tlrestrictions{Ограничения}
+    \tlsubtask{Subtask}
+\fi
+
+\ifdefined\opt@it
+    \tlproblem{Problema}
+    \tlinputfile{File di input}
+    \tloutputfile{File di output}
+    \tlheaderc{Header C}
+    \tlheadercpp{Header C++}
+    \tlexamples{Esempi}
+    \tlexplanations{Spiegazione}
+    \tlpoints{Punti}
+    \tlrestrictions{Assunzioni}
+    \tlsubtask{Subtask}
+\fi
+
+\ifdefined\opt@hu
+    \tlproblem{Feladat}
+    \tlinputfile{Bemenet}
+    \tloutputfile{Kimenet}
+    \tlheaderc{Header C}
+    \tlheadercpp{Header C++}
+    \tlexamples{Példák}
+    \tlexplanations{Magyarázat}
+    \tlpoints{Pontszám}
+    \tlrestrictions{Korlátok}
+    \tlsubtask{Subtask}
+\fi
+
+\ifdefined\opt@uk
+    \tlproblem{Problem}
+    \tlinputfile{Input file}
+    \tloutputfile{Output file}
+    \tlheaderc{C header}
+    \tlheadercpp{C++ header}
+    \tlexamples{Examples}
+    \tlexplanations{Explanations}
+    \tlpoints{Points}
+    \tlrestrictions{Restrictions}
     \tlsubtask{Subtask}
 \fi
 
 % Problem information
 
 \newcommand\@contest{Olimpiada Locala de Informatica}
+\newcommand\@round{Locală}
+\newcommand\@class{IX}
 \newcommand\@location{Beius}
 \newcommand\@theday{13}
 \newcommand\@themonth{10}
@@ -150,6 +227,8 @@
 \newcommand\@problemfile{aplusb}
 \newcommand\@problemname{Aplusb}
 
+\newcommand\round[1]{\def\@round{#1}}
+\newcommand\class[1]{\def\@class{#1}}
 \newcommand\contest[1]{\def\@contest{#1}}
 \newcommand\location[1]{\def\@location{#1}}
 \renewcommand\date[3]{
@@ -158,39 +237,63 @@
     \def\@theyear{#3}%
 }
 \newcommand\logo[1]{\newcommand\@logo{#1}}
-\newcommand\filename[1]{\def\@problemfile{\MakeLowercase{\RemoveSpaces{#1}}}}
+\newcommand\otherlogo[1]{\newcommand\@otherlogo{#1}}
 \renewcommand\title[1]{
     \def\@problemname{#1}%
-    \filename{#1}%
+    \def\@problemfile{#1}%
 }
+\newcommand\filename[1]{\def\@problemfile{#1}}
 
 % Convenience commands
 
 \npthousandsep{\,}
 \newcommand\np[1]{\numprint{#1}}
 
-% Thanks to Dave Carlisle: https://tex.stackexchange.com/a/87510
-\def\RemoveSpaces#1{\zap@space#1 \@empty}
-
 % Page setup
 
-\hoffset=-24mm
-\voffset=-30.5mm
-\textheight=255mm
-\textwidth=175mm
-\footskip=8mm
-\headheight=2cm
-\headsep=5mm
-\hfuzz=1pt
-\parindent=0mm
-\parskip=1ex
-\setitemize{noitemsep,topsep=0pt}
-\pagestyle{fancy}
 
-\lhead{\sffamily\@contest\\\@location\\\formatdate{\@theday}{\@themonth}{\@theyear}}
-\rhead{\ifdefined\@logo\includegraphics[height=15mm]{\@logo}\fi}
+\ifdefined\opt@onistyle
+    \hoffset=-1in
+    \voffset=-1in
+    \headsep=5mm
+    \footskip=7mm
+    \headheight=3.42cm
+    \topmargin=-10mm
+    \textwidth=186mm
+    \textheight=250.8mm
+    \hfuzz=1pt
+    \parindent=0mm
+    \parskip=1ex
+    \oddsidemargin=12mm
+    \setitemize{noitemsep,topsep=0pt}
+    \setenumerate{noitemsep,topsep=0pt}
+    \pagestyle{fancy}
+    
+    \lhead{\footnotesize \includegraphics[height=15mm]{\@otherlogo}\\\sffamily \@contest, \@round, \@class}
+    
+    \rhead{\footnotesize \includegraphics[height=15mm]{\@logo}\\\sffamily
+    \formatdate{\@theday}{\@themonth}{\@theyear}}
+\else
+    \hoffset=-24mm
+    \voffset=-30.5mm
+    \textheight=255mm
+    \textwidth=175mm
+    \footskip=8mm
+    \headheight=2cm
+    \headsep=5mm
+    \hfuzz=1pt
+    \parindent=0mm
+    \parskip=1ex
+    \setitemize{noitemsep,topsep=0pt}
+    \setenumerate{noitemsep,topsep=0pt}
+    \pagestyle{fancy}
+    
+    \lhead{\sffamily\@contest\\\@location\\\formatdate{\@theday}{\@themonth}{\@theyear}}
+    \rhead{\ifdefined\@logo\includegraphics[height=15mm]{\@logo}\fi}
+\fi
+
 \cfoot{\thepage/\pageref{LastPage}}
-
+    
 \lstset{
     basicstyle=\footnotesize\tt,
     escapeinside={\%*}{*)},
@@ -210,25 +313,24 @@
     stringstyle=\color{red},
     tabsize=2,
     title=\lstname,
-    aboveskip=-10pt,
-    columns=fixed
+    aboveskip=-10pt
 }
 
 % Structural commands
 
 \titleformat{\section}{\bfseries\Large\sffamily}{}{0pt}{}{}
-\titlespacing{\section}{0pt}{2pt}{2pt}
+\titlespacing{\section}{0pt}{-1pt}{-1pt}
 
 \titleformat{\subsection}{\bfseries\large\sffamily}{}{0pt}{}{}
-\titlespacing{\subsection}{0pt}{2pt}{2pt}
+\titlespacing{\subsection}{0pt}{-1pt}{-1pt}
 
 \newenvironment{examples}{%
     \section{\@examples}%
     \ttfamily\obeylines\obeyspaces\frenchspacing%
     \begin{tabular}{|l|l|}%
     \hline%
-    \multicolumn{1}{|c|}{\bf\texttt{\@inputfile}}&%
-    \multicolumn{1}{|c|}{\bf\texttt{\@outputfile}}%
+    \multicolumn{1}{|c|}{\bf\texttt{\xmakefirstuc{\@inputfile}}}&%
+    \multicolumn{1}{|c|}{\bf\texttt{\xmakefirstuc{\@outputfile}}}%
     \\%
     \hline%
 }
@@ -241,9 +343,9 @@
     \ttfamily\obeylines\obeyspaces\frenchspacing%
     \begin{tabular}{|l|l|l|}%
     \hline%
-    \multicolumn{1}{|c|}{\bf\texttt{\@inputfile}}&%
-    \multicolumn{1}{|c|}{\bf\texttt{\@outputfile}}&%
-    \multicolumn{1}{|c|}{\bf\texttt{\@explanations}}%
+    \multicolumn{1}{|c|}{\bf\texttt{\xmakefirstuc{\@inputfile}}}&%
+    \multicolumn{1}{|c|}{\bf\texttt{\xmakefirstuc{\@outputfile}}}&%
+    \multicolumn{1}{|c|}{\bf\texttt{\xmakefirstuc{\@explanations}}}%
     \\%
     \hline%
 }
@@ -276,7 +378,7 @@
     \fi%
     \begin{tabular}{c c l}%
     \toprule%
-    \textbf{\#} & \textbf{\@points} & \textbf{\@restrictions}%
+    \textbf{\#} & \textbf{\xmakefirstuc{\@points}} & \textbf{\xmakefirstuc{\@restrictions}}%
 }
 {%
     \\ \bottomrule%
@@ -290,30 +392,19 @@
 }
 
 \ifdefined\opt@listRestrictions
-    \renewenvironment{restrictions}[1][]{%
-        \setcounter{@restrictionid}{0}%
-        \section{\@restrictions}%
-        \ifx#1\empty\else%
-        \begin{itemize}%
-        #1%
-        \end{itemize}%
-        \fi%
-    }{}
+    \renewenvironment{restrictions}{\setcounter{@restrictionid}{0}\section{\@restrictions}}{}
 
     \renewcommand\restr[2]{%
         \stepcounter{@restrictionid}%
         \subsection{\@subtask{} \the@restrictionid{} (#1)}%
         \begin{itemize}[noitemsep,topsep=-8pt]%
-        \saveexpandmode%
-        \noexpandarg%
-        \IfBeginWith{#2}{\item}{#2}{\item #2}%
-        \restoreexpandmode%
+        #2%
         \end{itemize}%
     }
 \fi
 
 \renewcommand\maketitle{%
-    \textbf{\LARGE\textsf{\@problem{} \LARGE \@problemname}}%
+    \textbf{\LARGE\textsf{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
     \par{\vspace{3mm}}%
     \normalsize\parindent=6.5mm%
     \vbox{%
@@ -328,13 +419,13 @@
 
 \ifdefined\opt@files
     \renewcommand\maketitle{%
-        \textbf{\LARGE\textsf{\@problem{} \LARGE \@problemname}}%
+        \textbf{\LARGE\textsf{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
         \par{\vspace{3mm}}%
         \normalsize\parindent=6.5mm%
         \vbox{%
             \begin{tabular}{l@{\extracolsep{1cm}}l}%
-             \@inputfile & \texttt{\@problemfile{}.in} \\%
-             \@outputfile & \texttt{\@problemfile{}.out} \\%
+             \@inputfile & \texttt{\lowercase{\@problemfile{}}.in} \\%
+             \@outputfile & \texttt{\lowercase{\@problemfile{}}.out} \\%
             \end{tabular}%
         }%
         \par\vspace{2mm}%
@@ -346,8 +437,8 @@
         \ttfamily\obeylines\obeyspaces\frenchspacing%
         \begin{tabular}{|l|l|}%
         \hline%
-        \multicolumn{1}{|c|}{\bf\texttt{\@problemfile{}.in}}&%
-        \multicolumn{1}{|c|}{\bf\texttt{\@problemfile{}.out}}%
+        \multicolumn{1}{|c|}{\bf\texttt{\lowercase{\@problemfile{}}.in}}&%
+        \multicolumn{1}{|c|}{\bf\texttt{\lowercase{\@problemfile{}}.out}}%
         \\%
         \hline%
     }
@@ -360,9 +451,9 @@
         \ttfamily\obeylines\obeyspaces\frenchspacing%
         \begin{tabular}{|l|l|l|}%
         \hline%
-        \multicolumn{1}{|c|}{\bf\texttt{\@problemfile{}.in}}&%
-        \multicolumn{1}{|c|}{\bf\texttt{\@problemfile{}.out}}&%
-        \multicolumn{1}{|c|}{\bf\texttt{\@explanations}}%
+        \multicolumn{1}{|c|}{\bf\texttt{\lowercase{\@problemfile{}}.in}}&%
+        \multicolumn{1}{|c|}{\bf\texttt{\lowercase{\@problemfile{}}.out}}&%
+        \multicolumn{1}{|c|}{\bf\texttt{\xmakefirstuc{\@explanations}}}%
         \\%
         \hline%
     }
@@ -373,16 +464,15 @@
 
 \ifdefined\opt@header
     \renewcommand\maketitle{%
-        \textbf{\LARGE\textsf{\@problem{} \LARGE \@problemname}}%
+        \textbf{\LARGE\textsf{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
         \par{\vspace{3mm}}%
         \normalsize\parindent=6.5mm%
         \vbox{%
             \begin{tabular}{l@{\extracolsep{1cm}}l}%
-             \@headercpp & \texttt{\@problemfile{}.h} \\%
+             \@headercpp & \texttt{\lowercase{\@problemfile{}}.h} \\%
             \end{tabular}%
         }%
         \par\vspace{2mm}%
         \normalsize\parindent=0mm%
     }
 \fi
-
