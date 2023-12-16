@@ -99,17 +99,21 @@
 \RequirePackage{datatool-base}
 \RequirePackage{mfirstuc}
 \RequirePackage{amsmath}
-\RequirePackage{amsfonts}
+\RequirePackage[bitstream-charter]{mathdesign}
+\RequirePackage[scaled=1.03]{inconsolata}
+\RequirePackage{avant}
 \RequirePackage{listings}
 \RequirePackage{color}
 \RequirePackage{tabularx}
 \RequirePackage{booktabs}
 \RequirePackage{enumitem}
+\RequirePackage{bm}
 \RequirePackage{datetime}
 \RequirePackage{numprint}
 \RequirePackage{enumitem}
 \RequirePackage{yfonts}
 \RequirePackage{lastpage}
+\RequirePackage{calc}
 
 % Keywords
 
@@ -277,16 +281,16 @@
     \hoffset=-1in
     \voffset=-30.5mm
     \textheight=255mm
-    \textwidth=175mm
+    \textwidth=170mm
     \footskip=8mm
     \headheight=2cm
     \headsep=5mm
     \hfuzz=1pt
     \parindent=0mm
     \parskip=1ex
-    \oddsidemargin=17.5mm
-    \setitemize{noitemsep,topsep=0pt}
-    \setenumerate{noitemsep,topsep=0pt}
+    \oddsidemargin=20mm
+    \setitemize{itemsep=0.25pt,topsep=0.5pt}
+    \setenumerate{itemsep=0.25pt,topsep=0.5pt}
     \pagestyle{fancy}
     
     \lhead{\sffamily\@contest\\\@location\\\formatdate{\@theday}{\@themonth}{\@theyear}}
@@ -320,10 +324,10 @@
 % Structural commands
 
 \titleformat{\section}{\bfseries\Large\sffamily}{}{0pt}{}{}
-\titlespacing{\section}{0pt}{-1pt}{-1pt}
+\titlespacing{\section}{0pt}{2pt}{2pt}
 
 \titleformat{\subsection}{\bfseries\large\sffamily}{}{0pt}{}{}
-\titlespacing{\subsection}{0pt}{-1pt}{-1pt}
+\titlespacing{\subsection}{0pt}{2pt}{2pt}
 
 \newenvironment{examples}{%
     \section{\@examples}%
