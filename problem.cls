@@ -39,11 +39,11 @@
 % THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 \NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{problem}[2023/12/09 Problem statement for Romanian olympiads]
-\LoadClass[10pt,a4paper,oneside]{article}
+\LoadClass[11pt,a4paper,oneside]{article}
 
 % Declaring options
 
-\DeclareOption{onistyle}{\def\opt@onistyle{}}
+\DeclareOption{comicsans}{\def\opt@comicsans{}}
 
 \DeclareOption{en}{
     \def\opt@en{}
@@ -89,7 +89,7 @@
 % Packages
 
 \RequirePackage{fancyhdr}
-\RequirePackage[utf8]{inputenc}
+\RequirePackage{xcolor}
 \RequirePackage{etoolbox}
 \RequirePackage{fontenc}
 \RequirePackage{babel}
@@ -99,9 +99,8 @@
 \RequirePackage{datatool-base}
 \RequirePackage{mfirstuc}
 \RequirePackage{amsmath}
-\RequirePackage[bitstream-charter]{mathdesign}
-\RequirePackage[scaled=1.03]{inconsolata}
-\RequirePackage{avant}
+\RequirePackage[ebgaramond]{newtx}
+\RequirePackage{fontspec}
 \RequirePackage{listings}
 \RequirePackage{color}
 \RequirePackage{tabularx}
@@ -116,6 +115,8 @@
 \RequirePackage{calc}
 
 % Keywords
+
+\ifdefined\opt@comicsans\setmainfont{Comic Sans MS}\fi
 
 \newcommand\@problem{}
 \newcommand\@inputfile{}
@@ -255,47 +256,28 @@
 
 % Page setup
 
+\setlength{\textwidth}{140mm}
 
-\ifdefined\opt@onistyle
-    \hoffset=-1in
-    \voffset=-1in
-    \headsep=5mm
-    \footskip=7mm
-    \headheight=3.42cm
-    \topmargin=-10mm
-    \textwidth=186mm
-    \textheight=250.8mm
-    \hfuzz=1pt
-    \parindent=0mm
-    \parskip=1ex
-    \oddsidemargin=12mm
-    \setitemize{noitemsep,topsep=0pt}
-    \setenumerate{noitemsep,topsep=0pt}
-    \pagestyle{fancy}
-    
-    \lhead{\footnotesize \includegraphics[height=15mm]{\@otherlogo}\\\sffamily \@contest, \@round, \@class}
-    
-    \rhead{\footnotesize \includegraphics[height=15mm]{\@logo}\\\sffamily
-    \formatdate{\@theday}{\@themonth}{\@theyear}}
-\else
-    \hoffset=-1in
-    \voffset=-30.5mm
-    \textheight=255mm
-    \textwidth=170mm
-    \footskip=8mm
-    \headheight=2cm
-    \headsep=5mm
-    \hfuzz=1pt
-    \parindent=0mm
-    \parskip=1ex
-    \oddsidemargin=20mm
-    \setitemize{itemsep=0.25pt,topsep=0.5pt}
-    \setenumerate{itemsep=0.25pt,topsep=0.5pt}
-    \pagestyle{fancy}
-    
-    \lhead{\sffamily\@contest\\\@location\\\formatdate{\@theday}{\@themonth}{\@theyear}}
-    \rhead{\ifdefined\@logo\includegraphics[height=15mm]{\@logo}\fi}
-\fi
+\hoffset=-1in
+\voffset=-1in
+\headheight=17mm
+\headsep=3mm
+
+\setlength{\oddsidemargin}{(210mm-\textwidth)/2}
+\setlength{\textheight}{1.618\textwidth}
+\setlength{\topmargin}{(297mm-\textheight-\headsep-\headheight)/3}
+\setlength{\footskip}{\topmargin}
+
+\parskip=0.5em
+\parindent=0mm
+\setitemize{itemsep=0.1em-\parsep,topsep=0.2em-\parskip}
+\setenumerate{itemsep=0.1em-\parsep,topsep=0.2em-\parskip}
+
+\pagestyle{fancy}
+
+\lhead{\@contest\\\@location\\\formatdate{\@theday}{\@themonth}{\@theyear}}
+
+\rhead{\ifdefined\@logo\includegraphics[height=42pt]{\@logo}\fi}
 
 \cfoot{\thepage/\pageref{LastPage}}
     
@@ -323,10 +305,10 @@
 
 % Structural commands
 
-\titleformat{\section}{\bfseries\Large\sffamily}{}{0pt}{}{}
-\titlespacing{\section}{0pt}{2pt}{2pt}
+\titleformat{\section}{\bfseries\large}{}{0pt}{}{}
+\titlespacing{\section}{0pt}{3pt}{3pt}
 
-\titleformat{\subsection}{\bfseries\large\sffamily}{}{0pt}{}{}
+\titleformat{\subsection}{\bfseries\large}{}{0pt}{}{}
 \titlespacing{\subsection}{0pt}{2pt}{2pt}
 
 \newenvironment{examples}{%
@@ -334,8 +316,8 @@
     \ttfamily\obeylines\obeyspaces\frenchspacing%
     \begin{tabular}{|l|l|}%
     \hline%
-    \multicolumn{1}{|c|}{\bf\texttt{\xmakefirstuc{\@inputfile}}}&%
-    \multicolumn{1}{|c|}{\bf\texttt{\xmakefirstuc{\@outputfile}}}%
+    \multicolumn{1}{|c|}{ \bf\texttt{\xmakefirstuc{\@inputfile}}}&%
+    \multicolumn{1}{|c|}{ \bf\texttt{\xmakefirstuc{\@outputfile}}}%
     \\%
     \hline%
 }
@@ -359,16 +341,16 @@
 }
 
 \newcommand\exmp[2]{%
-    \begin{minipage}[t]{0.43\textwidth}\rightskip=0pt plus 1fill\relax #1 \medskip\end{minipage}&%%
-    \begin{minipage}[t]{0.43\textwidth}\rightskip=0pt plus 1fill\relax #2 \medskip\end{minipage}%
+    \begin{minipage}[t]{0.46\textwidth}\rightskip=0pt plus 1fill\relax  #1 \medskip\end{minipage}&%%
+    \begin{minipage}[t]{0.46\textwidth}\rightskip=0pt plus 1fill\relax #2 \medskip\end{minipage}%
     \\%%
     \hline%%
 }
 
 \newcommand\exmpexplained[3]{%
-    \begin{minipage}[t]{0.25\textwidth}\rightskip=0pt plus 1fill\relax #1 \medskip\end{minipage}&%
-    \begin{minipage}[t]{0.25\textwidth}\rightskip=0pt plus 1fill\relax #2 \medskip\end{minipage}&%
-    \begin{minipage}[t]{0.42\textwidth}\rightskip=0pt plus 1fill\relax #3 \medskip\end{minipage}\\%
+    \begin{minipage}[t]{0.25\textwidth}\rightskip=0pt plus 1fill\relax  #1 \medskip\end{minipage}&%
+    \begin{minipage}[t]{0.25\textwidth}\rightskip=0pt plus 1fill\relax  #2 \medskip\end{minipage}&%
+    \begin{minipage}[t]{0.43\textwidth}\rightskip=0pt plus 1fill\relax  #3 \medskip\end{minipage}\\%
     \hline%
 }
 
@@ -377,7 +359,7 @@
     \setcounter{@restrictionid}{0}%
     \section{\@restrictions}%
     \ifx#1\empty\else%
-    \begin{itemize}%
+    \begin{itemize}[leftmargin=*,topsep=0pt]%
     #1%
     \end{itemize}%
     \fi%
@@ -402,14 +384,14 @@
     \renewcommand\restr[2]{%
         \stepcounter{@restrictionid}%
         \subsection{\@subtask{} \the@restrictionid{} (#1)}%
-        \begin{itemize}[noitemsep,topsep=-8pt]%
+        \begin{itemize}[leftmargin=*]%
         #2%
         \end{itemize}%
     }
 \fi
 
 \renewcommand\maketitle{%
-    \textbf{\LARGE\textsf{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
+    \textbf{\LARGE{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
     \par{\vspace{3mm}}%
     \normalsize\parindent=6.5mm%
     \vbox{%
@@ -424,7 +406,7 @@
 
 \ifdefined\opt@files
     \renewcommand\maketitle{%
-        \textbf{\LARGE\textsf{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
+        \textbf{\LARGE{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
         \par{\vspace{3mm}}%
         \normalsize\parindent=6.5mm%
         \vbox{%
@@ -469,7 +451,7 @@
 
 \ifdefined\opt@header
     \renewcommand\maketitle{%
-        \textbf{\LARGE\textsf{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
+        \textbf{\LARGE{\@problem{} \LARGE \xmakefirstuc{\@problemname}}}%
         \par{\vspace{3mm}}%
         \normalsize\parindent=6.5mm%
         \vbox{%
