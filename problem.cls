@@ -45,6 +45,8 @@
 
 \DeclareOption{comicsans}{\def\opt@comicsans{}}
 
+\DeclareOption{otherlogo}{\def\opt@otherlogo{}}
+
 \DeclareOption{en}{
     \def\opt@en{}
     \PassOptionsToPackage{english}{babel}
@@ -275,9 +277,13 @@
 
 \pagestyle{fancy}
 
+\ifdefined\opt@otherlogo
+\lhead{\ifdefined\@otherlogo\includegraphics[height=30pt]{\@otherlogo}\\\fi\@contest, \@location}
+\rhead{\ifdefined\@logo\includegraphics[height=30pt]{\@logo}\\\fi\formatdate{\@theday}{\@themonth}{\@theyear}}
+\else
 \lhead{\@contest\\\@location\\\formatdate{\@theday}{\@themonth}{\@theyear}}
-
 \rhead{\ifdefined\@logo\includegraphics[height=42pt]{\@logo}\fi}
+\fi
 
 \cfoot{\thepage/\pageref{LastPage}}
     
