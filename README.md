@@ -1,6 +1,8 @@
 # problem.cls
 Latex class for informatics problems
 
+This fork of the project includes support for RTL languages, and better support overall for translation. It needs the LuaLaTeX compiler.
+
 # Contributors
 
 * Tamio-Vesa Nakajima
@@ -11,7 +13,6 @@ Latex class for informatics problems
 # Todo
 
 * Create examples.
-* Add more translation functionality (especially with RTL languages).
 
 # History
 

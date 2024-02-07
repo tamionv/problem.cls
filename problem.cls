@@ -43,10 +43,6 @@
 
 % Declaring options
 
-\DeclareOption{comicsans}{\def\opt@comicsans{}}
-
-\DeclareOption{otherlogo}{\def\opt@otherlogo{}}
-
 \DeclareOption{en}{
     \def\opt@en{}
     \PassOptionsToPackage{english}{babel}
@@ -55,29 +51,6 @@
 \DeclareOption{ro}{
     \def\opt@ro{}
     \PassOptionsToPackage{english, romanian}{babel}
-}
-
-\DeclareOption{bg}{
-    \def\opt@bg{}
-    \PassOptionsToPackage{T2A}{fontenc}
-    \PassOptionsToPackage{english, bulgarian}{babel}
-}
-
-\DeclareOption{it}{
-    \def\opt@it{}
-    \PassOptionsToPackage{english, italian}{babel}
-}
-
-\DeclareOption{hu}{
-    \def\opt@hu{}
-    \PassOptionsToPackage{T1}{fontenc}
-    \PassOptionsToPackage{english, hungarian}{babel}
-}
-
-\DeclareOption{uk}{
-    \def\opt@uk{}
-    \PassOptionsToPackage{T2A}{fontenc}
-    \PassOptionsToPackage{english, ukrainian}{babel}
 }
 
 \DeclareOption{files}{\def\opt@files{}}
@@ -93,15 +66,12 @@
 \RequirePackage{fancyhdr}
 \RequirePackage{xcolor}
 \RequirePackage{etoolbox}
-\RequirePackage{fontenc}
-\RequirePackage{babel}
-\RequirePackage{microtype}
+\RequirePackage[bidi=basic]{babel}
 \RequirePackage{titlesec}
 \RequirePackage{graphicx}
 \RequirePackage{datatool-base}
 \RequirePackage{mfirstuc}
 \RequirePackage{amsmath}
-\RequirePackage[ebgaramond]{newtx}
 \RequirePackage{fontspec}
 \RequirePackage{listings}
 \RequirePackage{color}
@@ -115,10 +85,9 @@
 \RequirePackage{yfonts}
 \RequirePackage{lastpage}
 \RequirePackage{calc}
+\RequirePackage{unicode-math}
 
 % Keywords
-
-\ifdefined\opt@comicsans\setmainfont{Comic Sans MS}\fi
 
 \newcommand\@problem{}
 \newcommand\@inputfile{}
@@ -144,6 +113,25 @@
 
 % Translation 
 
+\setmainfont{EB Garamond}
+\setmathfont{TeX Gyre Termes Math}
+\setmonofont{CMU Typewriter Text}
+
+\babelprovide[onchar=ids fonts]{arabic}
+\babelprovide[onchar=ids fonts]{armenian}
+\babelprovide[onchar=ids fonts]{georgian}
+\babelprovide[onchar=ids fonts]{hebrew}
+
+\babelfont[*arabic]{rm}{Noto Naskh Arabic}
+\babelfont[*armenian]{rm}{Noto Serif Armenian}
+\babelfont[*georgian]{rm}{Noto Serif Georgian}
+\babelfont[*hebrew]{rm}{Noto Serif Hebrew}
+
+\babelfont[*arabic]{tt}{Noto Sans Arabic}
+\babelfont[*armenian]{tt}{Noto Sans Armenian}
+\babelfont[*georgian]{tt}{Noto Sans Georgian}
+\babelfont[*hebrew]{tt}{Noto Sans Hebrew}
+
 \ifdefined\opt@en
     \tlproblem{Problem}
     \tlinputfile{Input file}
@@ -167,58 +155,6 @@
     \tlexplanations{Explicații}
     \tlpoints{Punctaj}
     \tlrestrictions{Restricții}
-    \tlsubtask{Subtask}
-\fi
-
-\ifdefined\opt@bg
-    \tlproblem{Задача}
-    \tlinputfile{Вход}
-    \tloutputfile{Изход}
-    \tlheaderc{Header C}
-    \tlheadercpp{Header C++}
-    \tlexamples{Пример}
-    \tlexplanations{Обяснение}
-    \tlpoints{Точки}
-    \tlrestrictions{Ограничения}
-    \tlsubtask{Subtask}
-\fi
-
-\ifdefined\opt@it
-    \tlproblem{Problema}
-    \tlinputfile{File di input}
-    \tloutputfile{File di output}
-    \tlheaderc{Header C}
-    \tlheadercpp{Header C++}
-    \tlexamples{Esempi}
-    \tlexplanations{Spiegazione}
-    \tlpoints{Punti}
-    \tlrestrictions{Assunzioni}
-    \tlsubtask{Subtask}
-\fi
-
-\ifdefined\opt@hu
-    \tlproblem{Feladat}
-    \tlinputfile{Bemenet}
-    \tloutputfile{Kimenet}
-    \tlheaderc{Header C}
-    \tlheadercpp{Header C++}
-    \tlexamples{Példák}
-    \tlexplanations{Magyarázat}
-    \tlpoints{Pontszám}
-    \tlrestrictions{Korlátok}
-    \tlsubtask{Subtask}
-\fi
-
-\ifdefined\opt@uk
-    \tlproblem{Problem}
-    \tlinputfile{Input file}
-    \tloutputfile{Output file}
-    \tlheaderc{C header}
-    \tlheadercpp{C++ header}
-    \tlexamples{Examples}
-    \tlexplanations{Explanations}
-    \tlpoints{Points}
-    \tlrestrictions{Restrictions}
     \tlsubtask{Subtask}
 \fi
 
@@ -277,13 +213,9 @@
 
 \pagestyle{fancy}
 
-\ifdefined\opt@otherlogo
-\lhead{\ifdefined\@otherlogo\includegraphics[height=30pt]{\@otherlogo}\\\fi\@contest, \@location}
-\rhead{\ifdefined\@logo\includegraphics[height=30pt]{\@logo}\\\fi\formatdate{\@theday}{\@themonth}{\@theyear}}
-\else
 \lhead{\@contest\\\@location\\\formatdate{\@theday}{\@themonth}{\@theyear}}
+
 \rhead{\ifdefined\@logo\includegraphics[height=42pt]{\@logo}\fi}
-\fi
 
 \cfoot{\thepage/\pageref{LastPage}}
     
@@ -356,7 +288,7 @@
 \newcommand\exmpexplained[3]{%
     \begin{minipage}[t]{0.25\textwidth}\rightskip=0pt plus 1fill\relax  #1 \medskip\end{minipage}&%
     \begin{minipage}[t]{0.25\textwidth}\rightskip=0pt plus 1fill\relax  #2 \medskip\end{minipage}&%
-    \begin{minipage}[t]{0.43\textwidth}\rightskip=0pt plus 1fill\relax  #3 \medskip\end{minipage}\\%
+    \begin{minipage}[t]{0.40\textwidth}\rightskip=0pt plus 1fill\relax  #3 \medskip\end{minipage}\\%
     \hline%
 }
 
