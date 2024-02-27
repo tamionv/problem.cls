@@ -64,6 +64,7 @@
 % Packages
 
 \RequirePackage{fancyhdr}
+\RequirePackage{makecell}
 \RequirePackage{xcolor}
 \RequirePackage{etoolbox}
 \RequirePackage[bidi=basic]{babel}
@@ -194,6 +195,8 @@
 
 % Page setup
 
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+
 \setlength{\textwidth}{140mm}
 
 \hoffset=-1in
@@ -313,7 +316,7 @@
 \newcommand\restr[2]{%
     \stepcounter{@restrictionid}%
     \\ \midrule{}%
-    \the@restrictionid{} & {#1} & {#2}%
+    \the@restrictionid{} & {#1} & \makecell{{#2}}%
 }
 
 \ifdefined\opt@listRestrictions
