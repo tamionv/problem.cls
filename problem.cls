@@ -98,6 +98,7 @@
 \RequirePackage{microtype}
 \RequirePackage{titlesec}
 \RequirePackage{graphicx}
+\RequirePackage{makecell}
 \RequirePackage{datatool-base}
 \RequirePackage{mfirstuc}
 \RequirePackage{amsmath}
@@ -381,7 +382,7 @@
 \newcommand\restr[2]{%
     \stepcounter{@restrictionid}%
     \\ \midrule{}%
-    \the@restrictionid{} & {#1} & {#2}%
+    \the@restrictionid{} & {#1} & {\makecell[l]{#2}}%
 }
 
 \ifdefined\opt@listRestrictions
