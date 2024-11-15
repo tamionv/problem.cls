@@ -1,6 +1,6 @@
 % BSD 3-Clause License
 % 
-% Copyright (c) 2021-2023, Tamio-Vesa Nakajima
+% Copyright (c) 2021-2024, Tamio-Vesa Nakajima
 % All rights reserved.
 % 
 % Redistribution and use in source and binary forms, with or without
@@ -78,8 +78,8 @@
 \RequirePackage{color}
 \RequirePackage{tabularx}
 \RequirePackage{booktabs}
-\RequirePackage{enumitem}
 \RequirePackage{bm}
+\RequirePackage{enumitem}
 \RequirePackage{datetime}
 \RequirePackage{numprint}
 \RequirePackage{enumitem}
