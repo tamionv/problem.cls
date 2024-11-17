@@ -114,24 +114,41 @@
 
 % Translation 
 
+\defaultfontfeatures{Ligatures=TeX}
+
 \setmainfont{EB Garamond}
 \setmathfont{TeX Gyre Termes Math}
 \setmonofont{CMU Typewriter Text}
 
-\babelprovide[onchar=ids fonts]{arabic}
-\babelprovide[onchar=ids fonts]{armenian}
-\babelprovide[onchar=ids fonts]{georgian}
-\babelprovide[onchar=ids fonts]{hebrew}
+\babelprovide[import, onchar=ids fonts]{arabic}
+\babelprovide[import, onchar=ids fonts]{armenian}
+\babelprovide[import, onchar=ids fonts]{georgian}
+\babelprovide[import, onchar=ids fonts]{hebrew}
+\babelprovide[import, onchar=ids fonts]{chinese}
+\babelprovide[import, onchar=ids fonts]{japanese}
+\babelprovide[import, onchar=ids fonts]{korean}
+\babelprovide[import, onchar=ids fonts]{thai}
+\babelprovide[import, onchar=ids fonts]{hindi}
 
-\babelfont[*arabic]{rm}{Noto Naskh Arabic}
-\babelfont[*armenian]{rm}{Noto Serif Armenian}
-\babelfont[*georgian]{rm}{Noto Serif Georgian}
-\babelfont[*hebrew]{rm}{Noto Serif Hebrew}
+\babelfont[arabic]{rm}{Noto Naskh Arabic}
+\babelfont[armenian]{rm}{Noto Serif Armenian}
+\babelfont[georgian]{rm}{Noto Serif Georgian}
+\babelfont[hebrew]{rm}{Noto Serif Hebrew}
+\babelfont[chinese]{rm}{Noto Serif CJK SC}
+\babelfont[japanese]{rm}{Noto Serif CJK JP}
+\babelfont[korean]{rm}{Noto Serif CJK KR}
+\babelfont[thai]{rm}{Noto Serif Thai}
+\babelfont[hindi]{rm}{Noto Serif Devanagari}
 
-\babelfont[*arabic]{tt}{Noto Sans Arabic}
-\babelfont[*armenian]{tt}{Noto Sans Armenian}
-\babelfont[*georgian]{tt}{Noto Sans Georgian}
-\babelfont[*hebrew]{tt}{Noto Sans Hebrew}
+\babelfont[arabic]{tt}{Noto Sans Arabic}
+\babelfont[armenian]{tt}{Noto Sans Armenian}
+\babelfont[georgian]{tt}{Noto Sans Georgian}
+\babelfont[hebrew]{tt}{Noto Sans Hebrew}
+\babelfont[chinese]{tt}{Noto Sans Mono CJK SC}
+\babelfont[japanese]{tt}{Noto Sans Mono CJK JP}
+\babelfont[korean]{tt}{Noto Sans Mono CJK KR}
+\babelfont[thai]{tt}{Noto Sans Thai}
+\babelfont[hindi]{tt}{Noto Sans Devanagari}
 
 \ifdefined\opt@en
     \tlproblem{Problem}
