@@ -108,13 +108,13 @@
 
 \setmonofont{IBM Plex Mono}[Scale=MatchLowercase]
 
-\definecolor{mycolor}{Hsb}{200, 0.9, 0.40}
+\definecolor{maincolor}{Hsb}{200, 0.9, 0.40}
 
 \titleformat{\section}[wrap]
     {\normalfont\fontseries{b}\fontshape{sc}\selectfont\large\filcenter}
     {\normalfont\mdseries\upshape}
     {0pt}
-    {\hspace{-1cm}\lsstyle{{\textcolor{mycolor}{\rule{.3cm}{.3cm}}\hspace{.7cm}}}}
+    {\hspace{-1cm}\lsstyle{{\textcolor{maincolor}{\rule{.3cm}{.3cm}}\hspace{.7cm}}}}
 
 \titlespacing*{\section}{90pt}{11.4pt}{20pt}
 
@@ -146,7 +146,7 @@
 
     \begin{center}
     \begin{NiceTabular}{ccl}
-        \CodeBefore\rowcolor{mycolor!20}{1}\rowcolors{2}{mycolor!5}{}\Body
+        \CodeBefore\rowcolor{maincolor!20}{1}\rowcolors{2}{maincolor!5}{}\Body
         \toprule[0pt]
         \textbf{\#} & \textbf{\@tlpoints} & \textbf{\@tlconstraints}
 }{
@@ -205,7 +205,7 @@ function getColor(currParity)
 
     return tern(
         math.fmod(currParity[1], 2) == 0,
-        "\\cellcolor{mycolor!5}",
+        "\\cellcolor{maincolor!5}",
         "")
 end
 
@@ -223,11 +223,12 @@ function splitLinesToArray(linesIt, width, currParity)
     local arr = {}
     for line in linesIt do
         local i = 1
+        local theColor = getColor(currParity)
         while i <= #line
         do
             local delta = width - tern(i > 1, 3, 0)
             table.insert(arr,
-                getColor(currParity)
+                theColor
                 .. tern(i > 1, "\\textcolor{gray}{\\ding{213}} ", "")
                 .. escapeLine(
                     trim(string.sub(line, i, math.min(#line, i + delta - 1)))))
@@ -293,7 +294,7 @@ function printTable()
         end
         tex.print("\\begin{center}")
         tex.print("\\begin{NiceTabular}{l|l|w{l}{" .. explWidth .. "}}")
-        tex.print("\\CodeBefore\\rowcolor{mycolor!20}{1}\\Body")
+        tex.print("\\CodeBefore\\rowcolor{maincolor!20}{1}\\Body")
         tex.print("\\textbf{"
             .. tlInputData ..
             "} & \\textbf{"
@@ -310,7 +311,7 @@ function printTable()
         end
         tex.print("\\begin{center}")
         tex.print("\\begin{NiceTabular}{l|l}")
-        tex.print("\\CodeBefore\\rowcolor{mycolor!20}{1}\\Body")
+        tex.print("\\CodeBefore\\rowcolor{maincolor!20}{1}\\Body")
         tex.print("\\textbf{"
             .. tlInputData ..
             "} & \\textbf{"
@@ -403,6 +404,10 @@ end
         \vspace{7pt}
 }
 
+\newcommand\lefthead[1]{\def\@lefthead{#1}}
+\newcommand\centerhead[1]{\def\@centerhead{#1}}
+\newcommand\righthead[1]{\def\@righthead{#1}}
+
 \newcommand\leftlogo[1]{\def\@lefthead{\includegraphics[height=40pt]{#1}}}
 \newcommand\centerlogo[1]{\def\@centerhead{\includegraphics[height=40pt]{#1}}}
 \newcommand\rightlogo[1]{\def\@righthead{\includegraphics[height=40pt]{#1}}}
@@ -410,11 +415,11 @@ end
 \npthousandsep{\,}
 \newcommand\np{\numprint}
 \newcommand{\filename}[1]{\texttt{#1}}
-\newcommand\alert[1]{{\color{mycolor}#1}}
+\newcommand\alert[1]{{\color{maincolor}#1}}
 
 \newlist{constraints}{itemize*}{1}
 \setlist[constraints]{
-    label={\textcolor{mycolor}{\ding{117}}}\phantom{a},
+    label={\textcolor{maincolor}{\ding{117}}}\phantom{a},
     itemjoin={\\}
 }
 

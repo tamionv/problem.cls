@@ -51,12 +51,12 @@ middle, one in the right. These can be set using the following commands:
 \rightlogo{c.png}
 ```
 
-Of course, the headers can be changed manually using
+The headers can also be changed manually using
 
 ```
-\lhead{. . .}
-\chead{. . .}
-\rhead{. . .}
+\lefthead{. . .}
+\centerhead{. . .}
+\righthead{. . .}
 ```
 
 ### Title
@@ -173,6 +173,15 @@ number of characters in a line. (Lines longer than that will be broken.) The
 `explanation width` argument allows us control the width of the explanation
 column in the table, this time in terms of centimeters (or any other latex
 unit). The next 3 arguments are all for translating the text in the table.
+
+### Colors
+
+You can redefine the main color used by the color scheme through the `maincolor`
+color, using standard `xcolor` syntax, e.g.
+
+```
+\definecolor{maincolor}{HTML}{112233}
+```
 
 ### Example
 
