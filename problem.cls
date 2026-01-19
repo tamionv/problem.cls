@@ -1,5 +1,5 @@
 %% problem.cls
-%% Copyright 2025 Tamio-Vesa Nakajima
+%% Copyright 2025-2026 Tamio-Vesa Nakajima
 %
 % This work may be distributed and/or modified under the
 % conditions of the LaTeX Project Public License, either version 1.3
@@ -17,7 +17,7 @@
 
 \NeedsTeXFormat{LaTeX2e}
 
-\ProvidesClass{problem}[2025/08/18 LaTeX class for informatics olympiads problems]
+\ProvidesClass{problem}[2026/01/19 LaTeX class for informatics olympiads problems]
 
 \DeclareOption{en}{\def\@langen{}}
 \ProcessOptions\relax
@@ -46,6 +46,7 @@
 \RequirePackage[letterspace=112]{letterspace}
 \RequirePackage[inline]{enumitem}
 \RequirePackage{babel}
+\RequirePackage{listings}
 
 \newcommand\tlpoints[1]{
     \def\@tlpoints{#1}
@@ -144,7 +145,6 @@
 \newenvironment{subtasks}[1][]{
     \setkeys{subtasks}{#1}
 
-    \begin{center}
     \begin{NiceTabular}{ccl}
         \CodeBefore\rowcolor{maincolor!20}{1}\rowcolors{2}{maincolor!5}{}\Body
         \toprule[0pt]
@@ -152,7 +152,6 @@
 }{
     \\ \bottomrule[0pt]
     \end{NiceTabular}
-    \end{center}
     \ifnum\the\value{@currscore}=\the\value{@fullscore}\relax{}\else
         {\color{red}Suma punctajelor nu e \the@fullscore{}, ci \the@currscore!}
     \fi
@@ -292,8 +291,7 @@ function printTable()
         if outputWidth == nil then
             outputWidth = 20
         end
-        tex.print("\\begin{center}")
-        tex.print("\\begin{NiceTabular}{l|l|w{l}{" .. explWidth .. "}}")
+        tex.print("\\begin{NiceTabular}[t]{l|l|w{l}{" .. explWidth .. "}}")
         tex.print("\\CodeBefore\\rowcolor{maincolor!20}{1}\\Body")
         tex.print("\\textbf{"
             .. tlInputData ..
@@ -309,7 +307,6 @@ function printTable()
         if outputWidth == nil then
             outputWidth = 35
         end
-        tex.print("\\begin{center}")
         tex.print("\\begin{NiceTabular}{l|l}")
         tex.print("\\CodeBefore\\rowcolor{maincolor!20}{1}\\Body")
         tex.print("\\textbf{"
@@ -330,7 +327,6 @@ function printTable()
     tex.print(tableText)
     tex.print("\\\\")
     tex.print("\\end{NiceTabular}")
-    tex.print("\\end{center}")
 end
 \end{luacode*}
 
@@ -395,7 +391,29 @@ end
     }
 
 }{
+    \begin{trivlist}
+    \item
     \directlua{printTable()}
+    \end{trivlist}
+}
+
+\newenvironment{interaction}{
+\begin{NiceTabular}[t]{l|l|l}
+\CodeBefore
+  \rowcolors{2}{maincolor!5}{white}
+\Body
+  \rowcolor{maincolor!20}
+    \textbf{Action} & \textbf{Response} & \textbf{Explanation} \\
+}{
+\end{NiceTabular}
+}
+
+\newcommand\action[2]{
+\hline {#1} & & {#2} \\
+}
+
+\newcommand\response[2]{
+\hline & {#1} & {#2} \\
 }
 
 \DeclareDocumentCommand\maketitle{o}{
@@ -417,10 +435,21 @@ end
 \newcommand{\filename}[1]{\texttt{#1}}
 \newcommand\alert[1]{{\color{maincolor}#1}}
 
-\newlist{constraints}{itemize*}{1}
-\setlist[constraints]{
+\newlist{@constraints}{itemize*}{1}
+\setlist[@constraints]{
     label={\textcolor{maincolor}{\ding{117}}}\phantom{a},
     itemjoin={\\}
 }
 
+\newenvironment{constraints}{
+\begin{@constraints}
+}{
+\end{@constraints}
+}
 \pagestyle{main}
+\lstset{
+    basicstyle=\footnotesize\tt,
+    frame=single,
+    language=c++,
+    keywordstyle={\color{maincolor}}
+}
