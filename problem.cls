@@ -351,9 +351,9 @@ end
 \newenvironment{examples}[1][]{
     \def\@explwidth{5cm}
 
-    \setkeys{examples}{#1}
-
     \directlua{resetState()}
+
+    \setkeys{examples}{#1}
 
     \DeclareDocumentCommand\@calcHeight{m}{
         \settoheight\@rowheight{
