@@ -178,7 +178,7 @@ end
 
 function escapeLine(line)
     return line
-        :gsub("\\", "\\\\")
+        :gsub("\\", "\\textbackslash")
         :gsub("{", "\\{")
         :gsub("}", "\\}")
         :gsub("%$", "\\$")
@@ -256,6 +256,7 @@ function processBuffers(inIt, outIt, minH, descriere)
 end
 
 function processFile(file, minH, descriere)
+    file = (status.output_directory or ".") .. "/" .. file
     if trim(descriere) ~= "" then
         hasDesc = true
     end
@@ -389,7 +390,6 @@ end
                 "\luaescapestring{##3}")
         }
     }
-
 }{
     \begin{trivlist}
     \item
