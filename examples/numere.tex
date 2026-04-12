@@ -1,0 +1,52 @@
+\documentclass{problem}
+
+% Change the title appropriately
+\title{Numere}
+
+% Replace these file names by the desired logos.
+\leftlogo{logo1.jpg}
+\centerlogo{logo2.jpg}
+\rightlogo{logo3.jpg}
+
+\begin{document}
+
+\maketitle
+
+Se dau $n$ numere naturale.
+
+\section{Cerință}
+
+Să se găsească sum lor.
+
+\section{Date de intrare}
+În fișierul de intrare \filename{numere.in} se vor găsi numerele.
+
+\section{Date de ieșire}
+În fișierul de ieșire \filename{numere.out} se va afiș suma.
+
+\section{Restricții}
+
+\begin{constraints}
+    \item Sunt cel mult $\np{1000}$ de numere.
+    \item Numerele sunt nenule.
+\end{constraints}
+
+\begin{subtasks}
+    \task{50}{Va exista un singur număr}
+    \task{50}{Fără restricții suplimentare}
+\end{subtasks}
+
+\section{Exemple}
+
+\begin{examples}
+    % This assumes that files numere.in and numere.out exist.
+    \fromfile{numere}
+    \fromtext{
+        3
+        1 2
+    }{
+        3
+    }
+\end{examples}
+
+\end{document}
