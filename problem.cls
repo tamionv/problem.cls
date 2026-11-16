@@ -10,22 +10,35 @@
 % version 2008 or later.
 %
 % This work has the LPPL maintenance status `maintained'.
-% 
+%
 % The Current Maintainer of this work is Tamio-Vesa Nakajima
 %
 % This work consists of the file problem.cls
 
 \NeedsTeXFormat{LaTeX2e}
 
-\ProvidesClass{problem}[2026/01/19 LaTeX class for informatics olympiads problems]
+\ProvidesClass{problem}[2026/11/18 LaTeX class for informatics olympiads problems]
 
-\DeclareOption{en}{\def\@langen{}}
-\ProcessOptions\relax
+%%% Options
+
+\newif\if@en
+\DeclareOption{en}{\@entrue}
+\DeclareOption{ro}{\@enfalse}
+
+\newif\if@olympiad
+\DeclareOption{olympiadstyle}{\@olympiadtrue}
+\ProcessOptions
+
+\if@en
+    \PassOptionsToPackage{english}{babel}
+\else
+    \PassOptionsToPackage{romanian}{babel}
+\fi
+
+%%% Packages
 
 \LoadClass[11pt,a4paper,oneside]{article}
 \RequirePackage{geometry}
-\RequirePackage{xfp}
-\RequirePackage{etoolbox}
 \RequirePackage{luacode}
 \RequirePackage{keyval}
 \RequirePackage{pifont}
@@ -36,107 +49,92 @@
 \RequirePackage{makecell}
 \RequirePackage{numprint}
 \RequirePackage[sb]{libertinus}
-\RequirePackage{calc}
 \RequirePackage{nicefrac}
 \RequirePackage{graphicx}
 \RequirePackage{xcolor}
-\RequirePackage{colortbl}
 \RequirePackage{lastpage}
 \RequirePackage[bottomtitles,calcwidth,pagestyles]{titlesec}
 \RequirePackage[letterspace=112]{letterspace}
 \RequirePackage[inline]{enumitem}
 \RequirePackage{babel}
 \RequirePackage{listings}
+\RequirePackage{fvextra}
+\RequirePackage{tikz}
+\usetikzlibrary{arrows.meta}
 
-\newcommand\tlpoints[1]{
-    \def\@tlpoints{#1}
-}
-\newcommand\tlconstraints[1]{
-    \def\@tlconstraints{#1}
-}
-\newcommand\tlproblem[1]{
-    \def\@tlproblem{#1}
-}
+%%% Geometry and basic setup
 
-\newcommand\tlinputdata[1]{
-    \def\@tlinputdata{#1}
-    \directlua{
-        tlInputData="\luaescapestring{#1}"
-    }
-}
-\newcommand\tloutputdata[1]{
-    \def\@tloutputdata{#1}
-    \directlua{
-        tlOutputData="\luaescapestring{#1}"
-    }
-}
-\newcommand\tlexplanation[1]{
-    \def\@tlexplanation{#1}
-    \directlua{
-        tlExplanation="\luaescapestring{#1}"
-    }
-}
-
-\ifdef\@langen{
-    \PassOptionsToPackage{english}{babel}
-    \tlpoints{Points}
-    \tlconstraints{Constraints}
-    \tlinputdata{Input data}
-    \tloutputdata{Output data}
-    \tlexplanation{Explanation}
-    \tlproblem{Problem}
-}{
-    \PassOptionsToPackage{romanian}{babel}
-    \tlpoints{Punctaj}
-    \tlconstraints{Restricții}
-    \tlinputdata{Date de intrare}
-    \tloutputdata{Date de ieșire}
-    \tlexplanation{Explicații}
-    \tlproblem{Problema}
-}
-
-\geometry{a4paper,
-    width=147mm,
-    height=252mm, 
-    top=80pt,
-    headheight=45pt,
-    headsep=20pt,
-    footskip=30pt}
-
+\geometry{a4paper, width=147mm, height=252mm, top=80pt, headheight=45pt, headsep=20pt, footskip=30pt}
 
 \setlength\parskip{8pt}
 \setlength\parindent{0pt}
-
 \setmonofont{IBM Plex Mono}[Scale=MatchLowercase]
-
 \definecolor{maincolor}{Hsb}{200, 0.9, 0.40}
+
+%%% Translation
+
+\newcommand\@newtl[3]{%
+    \expandafter\newcommand\csname tl#1\endcsname[1]{\expandafter\def\csname @tl#1\endcsname{##1}}
+    \expandafter\def\csname @tl#1\endcsname{\if@en #2\else #3\fi}
+}
+
+\@newtl{points}     {Points}     {Punctaj}
+\@newtl{constraints}{Constraints}{Restricții}
+\@newtl{inputdata}  {Input data} {Date de intrare}
+\@newtl{outputdata} {Output data}{Date de ieșire}
+\@newtl{explanation}{Explanation}{Explicații}
+\@newtl{problem}    {Problem}    {Problema}
+\@newtl{action}     {Action}     {Acțiune}
+\@newtl{response}   {Response}   {Răspuns}
+
+
+%%% Sectioning
+
+\renewcommand\maketitle{
+    { \centering \huge\textbf{\textsc{\textls{\@tlproblem{} \@title}}} \par} \vspace{7pt}
+}
 
 \titleformat{\section}[wrap]
     {\normalfont\fontseries{b}\fontshape{sc}\selectfont\large\filcenter}
     {\normalfont\mdseries\upshape}
     {0pt}
     {\hspace{-1cm}\lsstyle{{\textcolor{maincolor}{\rule{.3cm}{.3cm}}\hspace{.7cm}}}}
-
 \titlespacing*{\section}{90pt}{11.4pt}{20pt}
+
+%%% Page style
 
 \def\@lefthead{}
 \def\@centerhead{}
 \def\@righthead{}
+
+\newcommand\lefthead[1]{\def\@lefthead{#1}}
+\newcommand\centerhead[1]{\def\@centerhead{#1}}
+\newcommand\righthead[1]{\def\@righthead{#1}}
+
+\newcommand\leftlogo[1]{\def\@lefthead{\includegraphics[height=40pt]{#1}}}
+\newcommand\centerlogo[1]{\def\@centerhead{\includegraphics[height=40pt]{#1}}}
+\newcommand\rightlogo[1]{\def\@righthead{\includegraphics[height=40pt]{#1}}}
 
 \newpagestyle{main}{
     \setfoot{}{$\nicefrac{\thepage}{\pageref{LastPage}}$}{}
     \headrule
     \sethead{\@lefthead}{\@centerhead}{\@righthead}
 }
+\pagestyle{main}
+
+%%% Constraints and subtasks
+
+\newcommand\@constraintslabel{\textcolor{maincolor}{\ding{117}}}
+
+\newlist{constraints}{itemize*}{1}
+\setlist[constraints]{
+    label={\@constraintslabel}\phantom{a},
+    itemjoin={\\}
+}
 
 \newcounter{@fullscore}
 \setcounter{@fullscore}{100}
-
-\newcounter{@restid}
-\setcounter{@restid}{1}
-
 \newcounter{@currscore}
-\setcounter{@currscore}{0}
 
 \define@key{subtasks}{translate points}{\tlpoints{#1}}
 \define@key{subtasks}{translate constraints}{\tlconstraints{#1}}
@@ -148,308 +146,241 @@
     \begin{NiceTabular}{ccl}
         \CodeBefore\rowcolor{maincolor!20}{1}\rowcolors{2}{maincolor!5}{}\Body
         \toprule[0pt]
-        \textbf{\#} & \textbf{\@tlpoints} & \textbf{\@tlconstraints}
+        \textbf{\#} & \textbf{\@tlpoints} & \textbf{\@tlconstraints} \\\midrule[0pt]
 }{
-    \\ \bottomrule[0pt]
+    \bottomrule[0pt]
     \end{NiceTabular}
-    \ifnum\the\value{@currscore}=\the\value{@fullscore}\relax{}\else
-        {\color{red}Suma punctajelor nu e \the@fullscore{}, ci \the@currscore!}
+    \ifnum\value{@currscore}=\value{@fullscore}\relax\else
+        {\color{red}Point score is not \the@fullscore{}, but \the@currscore!}
     \fi
 }
 
+\newcounter{@taskid}
+
 \newcommand{\task}[2]{
-    \\ \midrule[0pt] \the@restid & {#1} & \makecell[l]{#2}
-    \stepcounter{@restid}
+    \stepcounter{@taskid}
     \IfInteger{#1}{\addtocounter{@currscore}{#1}}{}
+    \the@taskid & {#1} & \makecell[l]{#2} \\
+}
+
+%%% Example table
+% Design here is a little bit complicated, but not that bad. We have "plumbing" commands first,
+% which literally typeset the table. We have a lua intermediate layer that takes the input, saves
+% into temporary files, does some preprocessing. Then we have a porcelain layer hiding the
+% complexity from the user.
+
+\newlength{\@padlen}
+\settowidth{\@padlen}{\texttt{x}}
+\newcommand{\@header}[1]{\hspace{\@padlen}\textbf{#1}\hspace{\@padlen}}
+
+\newlength{\@inwidth}
+\newlength{\@outwidth}
+\newlength{\@explwidth}
+\newlength{\@inputheadwidth}
+\newlength{\@outputheadwidth}
+
+\newcommand{\@contmarker}{%
+    \tikz[baseline=-0.6ex, gray, line width=0.45pt]{%
+        \draw[-{Computer Modern Rightarrow[length=1.2pt]}] (0,0) -- (0.45em,0);%
+    }%
+}
+
+\fvset{formatcom=\ttfamily,
+    breaklines,
+    breakanywhere,
+    breakanywheresymbolpre={},
+    breaksymbolleft=\@contmarker,
+    breaksymbolindentleftnchars=2,
+    breaksymbolsepleft=\@padlen,
+    breakautoindent=false,
+    breaksymbolright=\hspace{0pt},
+    breaksymbolindentrightnchars=1,
+    breaksymbolsepright=0pt,
+    highlightlines={2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,
+        32,34,36,38,40,42,44,46,48,50,52,54,56,58,60,62,64,66,
+        68,70,72,74,76,78,80,82,84,86,88,90,92,94,96,98,100},
+    highlightcolor=maincolor!5}
+
+\newif\if@hasDesc
+
+\newenvironment{@examples}{%
+    \setlength{\tabcolsep}{0pt}%
+    \if@hasDesc%
+        \begin{NiceTabular}[t]{@{}l|l|p{@explwidth}@{}}%
+        \CodeBefore\rowcolor{maincolor!20}{1}\Body%
+        \@header{\@tlinputdata} & \@header{\@tloutputdata} & \@header{\@tlexplanation} \\%
+    \else%
+        \begin{NiceTabular}{@{}l|l@{}}%
+        \CodeBefore\rowcolor{maincolor!20}{1}\Body%
+        \@header{\@tlinputdata} & \@header{\@tloutputdata} \\%
+    \fi%
+}{
+    \end{NiceTabular}
+}
+
+\newcommand\@exmprow[5]{%
+    \hline%
+    \if@hasDesc
+        \begin{minipage}[t]{#1}\VerbatimInput{#2}\end{minipage} & \begin{minipage}[t]{#3}\VerbatimInput{#4}\end{minipage}
+        & \parbox[t]{\@explwidth}{\footnotesize\leftskip\@padlen\rightskip\@padlen{}#5\par\vskip\@padlen} \\
+    \else
+        \begin{minipage}[t]{#1}\VerbatimInput{#2}\end{minipage} & \begin{minipage}[t]{#3}\VerbatimInput{#4}\end{minipage} \\
+    \fi
 }
 
 \begin{luacode*}
-function tern(t, a, b)
-    if t then
-        return a
-    else
-        return b
+local examples = {}
+local columnChars = {0, 0}
+
+local function examplePath(n, j)
+    return (status.output_directory or ".") .. "/" .. tex.jobname .. "-" .. j .. "-" .. n .. ".tmp"
+end
+
+function addExample(data, desc)
+    local paths = {}
+    for j = 1, 2 do
+        paths[j] = examplePath(#examples, j)
+        local f = assert(io.open(paths[j], "w"))
+        --- Forall lines, after removing leading/trailing whitespace
+        for line in (data[j]:gsub("^%s+", ""):gsub("%s+$", "") .. "\n"):gmatch("(.-)\r?\n") do
+            if #line > columnChars[j] then columnChars[j] = #line end
+            f:write(" ", line, "\n")
+        end
+        f:close()
     end
+
+    if desc ~= nil and desc ~= "" then tex.print("\\@hasDesctrue") end
+
+    table.insert(examples, { paths = paths, desc = desc })
 end
 
-function trim(s)
-    return s:gsub("^%s*", ""):gsub("%s*$", "")
-end
-
-function escapeLine(line)
-    return line
-        :gsub("\\", "\\textbackslash")
-        :gsub("{", "\\{")
-        :gsub("}", "\\}")
-        :gsub("%$", "\\$")
-        :gsub("%%", "\\%%")
-        :gsub("&", "\\&")
-        :gsub("#", "\\#")
-        :gsub("%^", "\\^")
-        :gsub("_", "\\_")
-end
-
-function resetState()
-    inputParity = {0}
-    outputParity = {0}
-    inputWidth = nil
-    outputWidth = nil
-    lineTable = {}
-    hasDesc = false
-    explWidth = "6cm"
-end
-
-function getColor(currParity)
-    currParity[1] = currParity[1] + 1
-
-    return tern(
-        math.fmod(currParity[1], 2) == 0,
-        "\\cellcolor{maincolor!5}",
-        "")
-end
-
-function formatRow(hline, col1, col2, col3)
-    return "\\\\"
-        .. tern(hline, "\\hline{}", "")
-        .. "\\obeyspaces\\ttfamily{}"
-        .. tern(col1 ~= nil, col1, getColor(inputParity))
-        .. " & \\obeyspaces\\ttfamily{}"
-        .. tern(col2 ~= nil, col2, getColor(inputParity))
-        .. tern(hasDesc, " & " .. col3, "")
-end
-
-function splitLinesToArray(linesIt, width, currParity)
-    local arr = {}
-    for line in linesIt do
-        local i = 1
-        local theColor = getColor(currParity)
-        while i <= #line
-        do
-            local delta = width - tern(i > 1, 3, 0)
-            table.insert(arr,
-                theColor
-                .. tern(i > 1, "\\textcolor{gray}{\\ding{213}} ", "")
-                .. escapeLine(
-                    trim(string.sub(line, i, math.min(#line, i + delta - 1)))))
-            i = i + delta
+function deleteExampleFiles()
+    for i = 0, #examples do
+        for j = 1, 2 do
+            os.remove(examplePath(i, j))
         end
     end
-    return arr
 end
 
-function processBuffers(inIt, outIt, minH, descriere)
-    local input = splitLinesToArray(inIt, inputWidth, inputParity)
-    local output = splitLinesToArray(outIt, outputWidth, outputParity)
+function printExampleTable()
+    local function sp(name) return tex.skip[name].width end
 
-    for i = 1, math.max(math.max(#input, #output), minH) do
-        tex.print(formatRow(i == 1, input[i], output[i],
-            tern(i == 1,
-                "\\Block{"
-                    .. tostring(math.max(math.max(#input, #output), minH))
-                    .. "-1}<\\footnotesize>{\\parbox{"
-                    .. explWidth
-                    .. "}{"
-                    .. descriere
-                    .. "}}",
-                "")))
-    end
-end
+    local capNames = {"@inwidth", "@outwidth"}
+    local headerNames = {"@inputheadwidth", "@outputheadwidth"}
 
-function processFile(file, minH, descriere)
-    file = (status.output_directory or ".") .. "/" .. file
-    if trim(descriere) ~= "" then
-        hasDesc = true
+    local function columnWidth(j)
+        local padLen = sp("@padlen")
+        return math.max(sp(headerNames[j]), math.min(sp(capNames[j]), (columnChars[j] + 2) * padLen))
     end
 
-    table.insert(lineTable, {
-        io.lines(file .. ".in"),
-        io.lines(file .. ".out"),
-        minH,
-        descriere})
-end
+    tex.print("\\begin{@examples}")
 
-function splitIntoLines(s)
-    return s:gsub("\\obeyedline%s*", "\r"):gmatch("[^\r]+")
-end
-
-function processValue(input, output, minH, descriere)
-    if trim(descriere) ~= "" then
-        hasDesc = true
+    for i = 1, #examples do
+        tex.print("\\@exmprow{"
+            .. columnWidth(1) .. "sp}{" .. examples[i].paths[1] .. "}{" 
+            .. columnWidth(2) .. "sp}{" .. examples[i].paths[2] .. "}{" 
+            .. examples[i].desc .. "}")
     end
 
-    table.insert(lineTable, {
-        splitIntoLines(input),
-        splitIntoLines(output),
-        minH,
-        descriere})
-end
+    tex.print("\\end{@examples}")
+    tex.print("\\directlua{deleteExampleFiles()}")
+    tex.print("\\@hasDescfalse")
 
-function printTable()
-    if hasDesc then
-        if inputWidth == nil then
-            inputWidth = 20
-        end
-        if outputWidth == nil then
-            outputWidth = 20
-        end
-        tex.print("\\begin{NiceTabular}[t]{l|l|w{l}{" .. explWidth .. "}}")
-        tex.print("\\CodeBefore\\rowcolor{maincolor!20}{1}\\Body")
-        tex.print("\\textbf{"
-            .. tlInputData ..
-            "} & \\textbf{"
-            .. tlOutputData ..
-            "} & \\textbf{"
-            .. tlExplanation ..
-            "}")
-    else
-        if inputWidth == nil then
-            inputWidth = 35
-        end
-        if outputWidth == nil then
-            outputWidth = 35
-        end
-        tex.print("\\begin{NiceTabular}{l|l}")
-        tex.print("\\CodeBefore\\rowcolor{maincolor!20}{1}\\Body")
-        tex.print("\\textbf{"
-            .. tlInputData ..
-            "} & \\textbf{"
-            .. tlOutputData ..
-            "}")
-    end
-
-    for i = 1, #lineTable do
-        processBuffers(
-            lineTable[i][1],
-            lineTable[i][2],
-            lineTable[i][3],
-            lineTable[i][4])
-    end
-
-    tex.print(tableText)
-    tex.print("\\\\")
-    tex.print("\\end{NiceTabular}")
+    examples = {}
+    columnChars = {0, 0}
 end
 \end{luacode*}
+
+\DeclareDocumentCommand\fromfile{O{}m}{
+    \directlua{
+        local base = (status.output_directory or ".") .. "/" .. "\luaescapestring{#2}"
+        addExample({
+            assert(io.loaddata(base .. ".in")),
+            assert(io.loaddata(base .. ".out"))
+        }, "\luaescapestring{\unexpanded{#1}}")
+    }
+}
+
+\DeclareDocumentCommand\fromtext{O{}+v+v}{
+    % Marker and newline are for getting around catcode troubles.
+    \directlua{
+        local marker = string.char(92) .. "obeyedline" .. string.char(37) .. "s*"
+        local newline = string.char(10)
+        addExample({
+            (("\luaescapestring{#2}"):gsub(marker, newline)),
+            (("\luaescapestring{#3}"):gsub(marker, newline))
+        }, "\luaescapestring{\unexpanded{#1}}")
+    }
+}
 
 \define@key{examples}{translate input data}{\tlinputdata{#1}}
 \define@key{examples}{translate output data}{\tloutputdata{#1}}
 \define@key{examples}{translate explanation}{\tlexplanation{#1}}
-
-\define@key{examples}{input width}{
-    \directlua{inputWidth=#1}
-}
-\define@key{examples}{output width}{
-    \directlua{outputWidth=#1}
-}
-\define@key{examples}{explanation width}{
-    \def\@explwidth{#1}
-    \directlua{explWidth="\luaescapestring{#1}"}
-}
-
-\newlength{\@rowheight}
-\newlength{\@textheight}
+\define@key{examples}{input width}{\setlength{\@inwidth}{#1}}
+\define@key{examples}{output width}{\setlength{\@outwidth}{#1}}
+\define@key{examples}{explanation width}{\setlength{\@explwidth}{#1}}
 
 \newenvironment{examples}[1][]{
-    \def\@explwidth{5cm}
-
-    \directlua{resetState()}
+    \makeatletter
+    \setlength{\@inwidth}{7cm}%
+    \setlength{\@outwidth}{5cm}%
+    \setlength{\@explwidth}{5cm}%
 
     \setkeys{examples}{#1}
 
-    \DeclareDocumentCommand\@calcHeight{m}{
-        \settoheight\@rowheight{
-            \begin{tabular}{l}\texttt{a}\end{tabular}
-        }
-        \settoheight\@textheight{
-            \begin{tabular}{p{\@explwidth}}
-                {\footnotesize{}##1}
-            \end{tabular}
-        }
-        \def\@minh{\fpeval{round(\@textheight/\@rowheight+0.5)}}
-    }
-    
-    \DeclareDocumentCommand\fromfile{mO{}}{
-        \@calcHeight{##2}
-
-        \directlua{
-            processFile(
-                "\luaescapestring{##1}",
-                \@minh,
-                "\luaescapestring{##2}")
-        }
-    }
-
-    \DeclareDocumentCommand\fromtext{+v+vO{}}{
-        \@calcHeight{##3}
-
-        \directlua{
-            processValue(
-                "\luaescapestring{##1}",
-                "\luaescapestring{##2}",
-                \@minh,
-                "\luaescapestring{##3}")
-        }
-    }
+    \settowidth{\@inputheadwidth}{\@header{\@tlinputdata}}%
+    \settowidth{\@outputheadwidth}{\@header{\@tloutputdata}}%
 }{
     \begin{trivlist}
     \item
-    \directlua{printTable()}
+    \directlua{printExampleTable()}
     \end{trivlist}
+    \makeatother
 }
+
+%%% Interaction tables (much simpler than example tables)
 
 \newenvironment{interaction}{
 \begin{NiceTabular}[t]{l|l|l}
 \CodeBefore
-  \rowcolors{2}{maincolor!5}{white}
+    \rowcolors{2}{maincolor!5}{}
 \Body
-  \rowcolor{maincolor!20}
-    \textbf{Action} & \textbf{Response} & \textbf{Explanation} \\
+    \rowcolor{maincolor!20}
+    \textbf{\@tlaction} & \textbf{\@tlresponse} & \textbf{\@tlexplanation} \\
 }{
 \end{NiceTabular}
 }
 
-\newcommand\action[2]{
-\hline {#1} & & {#2} \\
-}
+\newcommand\action[2]{\hline {#1} & & {#2} \\}
 
-\newcommand\response[2]{
-\hline & {#1} & {#2} \\
-}
+\newcommand\response[2]{\hline & {#1} & {#2} \\}
 
-\DeclareDocumentCommand\maketitle{o}{
-    \IfNoValueF{#1}{\tlproblem{#1}}
-    \centerline{\huge\textbf{\textsc{\textls{\@tlproblem{} \@title}}}}
-        \vspace{7pt}
-}
+%%% Listings
 
-\newcommand\lefthead[1]{\def\@lefthead{#1}}
-\newcommand\centerhead[1]{\def\@centerhead{#1}}
-\newcommand\righthead[1]{\def\@righthead{#1}}
-
-\newcommand\leftlogo[1]{\def\@lefthead{\includegraphics[height=40pt]{#1}}}
-\newcommand\centerlogo[1]{\def\@centerhead{\includegraphics[height=40pt]{#1}}}
-\newcommand\rightlogo[1]{\def\@righthead{\includegraphics[height=40pt]{#1}}}
-
-\npthousandsep{\,}
-\newcommand\np{\numprint}
-\newcommand{\filename}[1]{\texttt{#1}}
-\newcommand\alert[1]{{\color{maincolor}#1}}
-
-\newlist{@constraints}{itemize*}{1}
-\setlist[@constraints]{
-    label={\textcolor{maincolor}{\ding{117}}}\phantom{a},
-    itemjoin={\\}
-}
-
-\newenvironment{constraints}{
-\begin{@constraints}
-}{
-\end{@constraints}
-}
-\pagestyle{main}
 \lstset{
     basicstyle=\footnotesize\tt,
     frame=single,
     language=c++,
     keywordstyle={\color{maincolor}}
 }
+
+%%% Convenience commands
+
+\npthousandsep{\,}
+\newcommand\np{\numprint}
+\newcommand{\filename}[1]{\texttt{#1}}
+\newcommand\alert[1]{{\color{maincolor}#1}}
+
+%%% Unified settings for olympiad style
+
+\if@olympiad
+    \geometry{width=159.6mm, height=261mm, top=64pt}
+    \titleformat{\section}[block]
+        {\normalfont\fontseries{b}\fontshape{sc}\selectfont\large}
+        {\normalfont\mdseries\upshape}
+        {0pt}
+        {\lsstyle}
+    \titlespacing*{\section}{0pt}{0.3\baselineskip}{0pt}
+    \def\@constraintslabel{\textbullet}
+    \fvset{highlightlines={}}
+\fi

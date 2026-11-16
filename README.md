@@ -19,6 +19,10 @@ pairs, only the ones you want to set, (ii) if one of the values contains `[` or
 `]`, or `,` then you can enclose the value in `{` and `}` without changing the
 meaning of the command.
 
+### General styles
+
+You can access an alternate layout style for this package using the `olympiadstyle` package option.
+
 ### Language
 
 Most of the translation aspects will be easily handled as we go along. For
@@ -136,13 +140,13 @@ With inline explanations, the typical syntax is:
 \section{Exemple}
 
 \begin{examples}
-\fromfile{ex1}[An explanation]
+\fromfile[An explanation]{ex1}
 \fromfile{ex2}
-\fromtext{
+\fromtext[Another explanation]{
     input
 }{
     output
-}[Another explanation]
+}
 \fromtext{
     input
 }{
